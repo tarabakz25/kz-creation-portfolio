@@ -1,105 +1,145 @@
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry";
 
 type Props = {
-  UserName: string;
+  UserName?: string;
   cellSize?: number;
   cellGap?: number;
   heightScale?: number;
   maxClamp?: number;
-}
+};
 
-type DayCell = { x: number; y: number; date: string; count: number; color: string; };
+type DayCell = {
+  x: number;
+  y: number;
+  date: string;
+  count: number;
+  color: string;
+};
 
-const FetchData = async (UserName: string) => {
-  const Response = await fetch(`/api/github-contrib?user=${UserName}`);
-  if (!Response.ok) {
+type ContributionData = {
+  total: number;
+  width: number;
+  height: number;
+  days: DayCell[];
+};
+
+const fetchData = async (userName: string): Promise<ContributionData> => {
+  const params = new URLSearchParams({ username: userName });
+  const response = await fetch(`/api/github-contrib?${params.toString()}`);
+  if (!response.ok) {
     throw new Error("Failed to fetch GitHub contributions");
   }
 
-  return (await Response.json()) as {
-    total: number;
-    width: number;
-    height: number;
-    days: DayCell[];
-  };
-}
+  return (await response.json()) as ContributionData;
+};
 
 export default function GithubContrib3D({
   UserName,
-  cellsize = 10,
-  cellGap = 4,
-  heightScale = 0.4,
+  cellSize = 5,
+  cellGap = 1.5,
+  heightScale = 0.6,
   maxClamp = 20,
 }: Props) {
   const ContentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const resolvedUserName = UserName ?? "tarabakz25";
+
+    if (!resolvedUserName) {
+      console.warn("GithubContrib3D: GitHub username is not provided.");
+      return;
+    }
+
     let mounted = true;
     if (!ContentRef.current) return;
 
     const Content = ContentRef.current;
     
     const Scene = new THREE.Scene();
-    Scene.background = new THREE.Color(0x202020);
 
     const Renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     Renderer.setSize(Content.clientWidth, Content.clientHeight);
-    Renderer.setPixelRatio(window.devicePixelRatio);
+    Renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    Renderer.setClearColor(0x000000, 0);
     Content.appendChild(Renderer.domElement);
 
-    const Camera = new THREE.PerspectiveCamera(45, Content.clientWidth / Content.clientHeight, 0.1, 1000);
-    Camera.position.set(0, 100, 150);
+    const Camera = new THREE.PerspectiveCamera(38, Content.clientWidth / Content.clientHeight, 0.1, 1000);
+    Camera.position.set(0, 130, 130);
 
-    const Controls = new OrbitControls(Camera, Renderer.domElement);
-    Controls.enableDamping = true;
-    Controls.dampingFactor = 0.05;
-    Controls.minDistance = 50;
-    Controls.maxDistance = 300;
+    const rootGroup = new THREE.Group();
+    Scene.add(rootGroup);
+    rootGroup.scale.setScalar(0.42);
+    rootGroup.rotation.set(-0.34, 0, 0);
+    rootGroup.position.y = -6;
 
-    const AmbientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    Camera.lookAt(rootGroup.position);
+
+    const AmbientLight = new THREE.AmbientLight(0xffffff, 0.65);
     Scene.add(AmbientLight);
 
-    const DirectionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    DirectionalLight.position.set(100, 100, 100);
+    const DirectionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    DirectionalLight.position.set(120, 160, 140);
     Scene.add(DirectionalLight);
 
-    const createCell = (x: number, y: number, height: number, color: string) => {
-      const Geometry = new THREE.BoxGeometry(cellsize, height, cellsize);
-      const Material = new THREE.MeshStandardMaterial({ color });
+    const COLOR_HEIGHT_MAP: Record<string, number> = {
+      "#ebedf0": 1,
+      "#9be9a8": 4,
+      "#40c463": 8,
+      "#30a14e": 12,
+      "#216e39": 16,
+    };
+
+    const createCell = (xIndex: number, yIndex: number, height: number, color: string) => {
+      const radius = Math.min(cellSize * 0.4, 1);
+      const Geometry = new RoundedBoxGeometry(cellSize, height, cellSize, 4, radius);
+      const baseColor = new THREE.Color(color);
+      const brightColor = baseColor.clone().lerp(new THREE.Color(0xffffff), 0.22);
+      const Material = new THREE.MeshStandardMaterial({
+        color: brightColor,
+        emissive: brightColor.clone().multiplyScalar(0.12),
+        roughness: 0.28,
+        metalness: 0.1,
+      });
       const Cell = new THREE.Mesh(Geometry, Material);
-      Cell.position.set(
-        x * (cellsize + cellGap),
-        height / 2,
-        -y * (cellsize + cellGap)
-      );
+      const spacing = cellSize + cellGap;
+      Cell.position.set(xIndex * spacing, height / 2, -yIndex * spacing);
       return Cell;
-    }
+    };
 
     let AnimationId: number;
 
     const animate = () => {
-      Controls.update();
+      rootGroup.rotation.y += 0.0015;
       Renderer.render(Scene, Camera);
       AnimationId = requestAnimationFrame(animate);
     };
     animate();
 
-    FetchData(UserName).then(data => {
-      if (!mounted) return;
-      const OffsetX = -((data.width * (cellsize + cellGap)) / 2) + (cellsize + cellGap) / 2;
-      const OffsetY = ((data.height * (cellsize + cellGap)) / 2) - (cellsize + cellGap) / 2;
+    fetchData(resolvedUserName)
+      .then((data) => {
+        if (!mounted) return;
+        const halfWidth = (data.width - 1) / 2;
+        const halfHeight = (data.height - 1) / 2;
 
-      data.days.forEach(day => {
-        const clampedCount = Math.min(day.count, maxClamp);
-        const height = clampedCount * heightScale + 1; // Minimum height of 1
-        const cell = createCell(day.x + OffsetX / (cellsize + cellGap), day.y - OffsetY / (cellsize + cellGap), height, day.color);
-        Scene.add(cell);
+        data.days.forEach((day) => {
+          const clampedCount = Math.min(day.count, maxClamp);
+          const normalizedColor = day.color.toLowerCase();
+          const colorHeightMultiplier = COLOR_HEIGHT_MAP[normalizedColor] ?? Math.max(clampedCount, 1);
+          const height = Math.max(heightScale, colorHeightMultiplier * heightScale);
+          const cell = createCell(
+            day.x - halfWidth,
+            day.y - halfHeight,
+            height,
+            day.color,
+          );
+          rootGroup.add(cell);
+        });
+      })
+      .catch((err) => {
+        console.error(err);
       });
-    }).catch(err => {
-      console.error(err);
-    });
 
     const handleResize = () => {
       if (!ContentRef.current) return;
@@ -114,14 +154,13 @@ export default function GithubContrib3D({
       mounted = false;
       window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(AnimationId);
-      Controls.dispose();
       Renderer.dispose();
       Scene.clear();
       if (ContentRef.current) {
         ContentRef.current.removeChild(Renderer.domElement);
       }
     };
-  }, [UserName, cellsize, cellGap, heightScale, maxClamp]);
+  }, [UserName, cellSize, cellGap, heightScale, maxClamp]);
 
   return <div ref={ContentRef} className="w-full h-full" />;
 };

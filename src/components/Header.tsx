@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Hamburger } from './ui/hamburger';
 
 const MenuItems = [
-  { name: 'Home', href: "#home" },
-  { name: 'About', href: "#about" },
-  { name: 'Blogs', href: "#blogs" },
-  { name: 'Services', href: "#services" },
+  { name: 'Home', href: "/home" },
+  { name: 'About', href: "/about" },
+  { name: 'Blogs', href: "/blogs" },
+  { name: 'Services', href: "/services" },
 ];
 
 export default function Header() {
