@@ -43,17 +43,43 @@ import GithubContrib3D from '../components/Animations/GithubContrib3D.tsx';
     </div>
   </div>
 
-  <div class="relative flex flex-col w-full h-full bg-sky-950 overflow-hidden">
-    <div class="flex font-fugaz text-4xl text-white w-full h-screen items-center justify-center">
-      <MyIcon
-        width="100"
-        height="100"
-        alt="My Icon"
-        class="rounded-full mr-6"
-        loading="lazy"
-      />
-      <p>Hello. I'm Kizuki!</p>
+  <section class="relative flex flex-col w-full bg-sky-950/80 backdrop-blur-sm text-white overflow-hidden">
+    <div class="flex w-full py-56 items-center justify-center gap-36 font-fugaz">
+      <div class="flex flex-col">
+        <h1 class="text-6xl">Hello. I'm Kizuki!</h1>
+        <p class="font-mono text-xl">One of the students in Kamiyama Marugoto College.</p>
+        <p class="font-mono text-xl">I like Web Engineering, LLM and Entertainment.</p>
+      </div>
+      <div class="flex h-full">
+        <img
+          src={MyIcon.src}
+          width={MyIcon.width}
+          height={MyIcon.height}
+          alt="My Icon"
+          class="w-48 h-auto rounded-full shadow-lg object-cover"
+          loading="lazy"
+        />
+        <p class="mt-5 font-mono">< hi !</p>
+      </div>
     </div>
-  </div>
-  <GithubContrib3D client:load />
+    <div class="flex flex-col py-56 items-center justify-center font-fugaz">
+      <h2 class="text-6xl">My Mission</h2>
+      <p class="font-mono text-2xl mt-6 mb-12">Exploring creativity through code and curiosity.</p>
+      <h2 class="text-6xl">My Vision</h2>
+      <p class="font-mono text-2xl mt-6">To explore new possibilities through technology and imagination.</p>
+    </div>
+    <div class="flex flex-col py-56 items-center justify-center font-fugaz">
+      <h2 class="text-6xl">Gallery</h2>
+      <span>there is gallery secsion.</span>
+    </div>
+    <div class="flex flex-col py-56 items-center justify-center font-fugaz bg-gray-800">
+      <h2 class="text-6xl">Articles</h2>
+    </div>
+    <div class="border-1 border-gray-700 px-24"></div>
+    <div class="flex items-center font-fugaz bg-gray-800">
+      <h2 class="text-6xl">Contact</h2>
+      <div class="flex flex-col py-12 gap-6">
+      </div>
+    </div>
+  </section>
 </Layout>

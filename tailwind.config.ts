@@ -6,7 +6,8 @@ export default {
     extend: {
       fontFamily: {
         sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui'],
-        fugaz: ['"Fugaz One"', 'sans-serif'],     
+        fugaz: ['"Fugaz One"', 'sans-serif'],
+        mono: ['"Fira Mono"', 'monospace'],
       }
     }
   },
