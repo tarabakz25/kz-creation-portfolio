@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import CursorSpotlight from '../components/layouts/CursorSpotlight';
 ---
 <!doctype html>
 <html lang="en">
@@ -17,6 +18,9 @@ import '../styles/global.css';
 		<title>Kz Creation</title>
 	</head>
 	<body>
+		<!-- カーソルスポットライト効果 -->
+		<CursorSpotlight client:load />
+		
 		<!-- 固定要素用のスロット（smooth-wrapperの外側） -->
 		<slot name="fixed-elements" />
 		

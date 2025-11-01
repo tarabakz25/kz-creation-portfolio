@@ -161,3 +161,48 @@ body.prevent-scroll {
   margin: 0;
   padding: 0;
 }
+
+/* カーソルスポットライト効果 */
+.cursor-spotlight {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  background: radial-gradient(
+    circle 600px at var(--x, 50%) var(--y, 50%),
+    transparent 0%,
+    rgba(0, 0, 0, 0.4) 40%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: spotlight-fade-in 0.5s ease forwards;
+}
+
+.dark .cursor-spotlight {
+  background: radial-gradient(
+    circle 600px at var(--x, 50%) var(--y, 50%),
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 40%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+}
+
+/* モバイルでは非表示 */
+@media (max-width: 768px) {
+  .cursor-spotlight {
+    display: none;
+  }
+}
+
+@keyframes spotlight-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
