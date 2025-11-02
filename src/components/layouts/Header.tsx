@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaXTwitter, FaGithub } from 'react-icons/fa6';
 import titleImage from '~/assets/kz_creation.svg?url';
+import noteIcon from '~/assets/note.svg?url';
 
 type Page = 'home' | 'profile' | 'activity' | 'blog';
 
@@ -29,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ onPageChange, currentPage }) => {
         <a href="#" onClick={(e) => handleLinkClick(e, 'activity')}>Activity</a>
         <a href="#" onClick={(e) => handleLinkClick(e, 'blog')}>Notes</a>
       </div>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center gap-6">
         <a 
           href="https://twitter.com/kz25_kmc/" 
           target="_blank" 
@@ -40,7 +41,13 @@ const Header: React.FC<HeaderProps> = ({ onPageChange, currentPage }) => {
           href="https://github.com/tarabakz25/"
           target="_blank"
           rel="noopener noreferrer">
-            <FaGithub className="ml-6 text-2xl text-[#FCFCFC] transition-colors duration-300" />
+            <FaGithub className="text-2xl text-[#FCFCFC] transition-colors duration-300" />
+        </a>
+        <a 
+          href="https://note.com/kz25_01"
+          target="_blank"
+          rel="noopener noreferrer">
+            <img src={noteIcon} alt="note icon" className="h-6 w-auto text-2xl text-[#FCFCFC] transition-colors duration-300" />
         </a>
       </div>
     </header>

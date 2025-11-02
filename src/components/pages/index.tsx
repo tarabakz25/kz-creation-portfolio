@@ -33,6 +33,51 @@ export default function IndexContent() {
     };
   }, []);
 
+  // スクロール動作を完全に無効化
+  useEffect(() => {
+    const preventScroll = (e: Event) => {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    };
+
+    const preventScrollWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    };
+
+    const preventScrollTouch = (e: TouchEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    };
+
+    // 各種スクロールイベントを防止
+    window.addEventListener('wheel', preventScrollWheel, { passive: false });
+    window.addEventListener('touchmove', preventScrollTouch, { passive: false });
+    window.addEventListener('scroll', preventScroll, { passive: false });
+    document.addEventListener('wheel', preventScrollWheel, { passive: false });
+    document.addEventListener('touchmove', preventScrollTouch, { passive: false });
+    document.addEventListener('scroll', preventScroll, { passive: false });
+
+    // bodyとhtmlのスクロールを無効化
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.height = '100%';
+
+    return () => {
+      window.removeEventListener('wheel', preventScrollWheel);
+      window.removeEventListener('touchmove', preventScrollTouch);
+      window.removeEventListener('scroll', preventScroll);
+      document.removeEventListener('wheel', preventScrollWheel);
+      document.removeEventListener('touchmove', preventScrollTouch);
+      document.removeEventListener('scroll', preventScroll);
+    };
+  }, []);
+
   useEffect(() => {
     if (!isLoading && contentRef.current) {
       // コンテンツをフェードイン
@@ -118,13 +163,13 @@ export default function IndexContent() {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col bg-[#252525]">
+    <div className="w-full h-screen flex flex-col bg-[#252525] overflow-hidden">
       {isLoading ? (
         <Loading onComplete={handleLoadingComplete} />
       ) : (
-        <div ref={contentRef} className={hasVisited ? "w-full min-h-screen flex flex-col" : "opacity-0 w-full min-h-screen flex flex-col"}>
+        <div ref={contentRef} className={hasVisited ? "w-full h-screen flex flex-col overflow-hidden" : "opacity-0 w-full h-screen flex flex-col overflow-hidden"}>
           <Header onPageChange={handlePageChange} currentPage={currentPage} />
-          <div ref={pageContentRef} className="flex-1">
+          <div ref={pageContentRef} className="flex-1 overflow-hidden">
             {renderPageContent()}
           </div>
           <Footer />
