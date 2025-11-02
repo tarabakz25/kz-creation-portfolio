@@ -24,6 +24,7 @@ const Loading: React.FC<LoadingContentProps> = ({ onComplete }) => {
   const GRID_SIZE = 24;
   const CELL_SIZE = 40;
 
+  // ウィンドウサイズを計算してcols/rowsを設定
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -31,14 +32,20 @@ const Loading: React.FC<LoadingContentProps> = ({ onComplete }) => {
     const calculatedRows = Math.ceil(window.innerHeight / CELL_SIZE);
     setCols(calculatedCols);
     setRows(calculatedRows);
+  }, []);
 
-    const centerX = Math.floor(calculatedCols / 2);
-    const centerY = Math.floor(calculatedRows / 2);
+  // グリッドアニメーションを開始（cols/rowsが設定された後）
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (cols === 0 || rows === 0) return;
+
+    const centerX = Math.floor(cols / 2);
+    const centerY = Math.floor(rows / 2);
 
     const cells: Cell[] = [];
     let id = 0;
-    for (let row = 0; row < calculatedRows; row ++) {
-      for (let col = 0; col < calculatedCols; col ++) {
+    for (let row = 0; row < rows; row ++) {
+      for (let col = 0; col < cols; col ++) {
         const distance = Math.hypot(col - centerX, row - centerY);
         cells.push({ id: id++, row, col, distance });
       }
@@ -50,31 +57,68 @@ const Loading: React.FC<LoadingContentProps> = ({ onComplete }) => {
       [cells[i], cells[j]] = [cells[j], cells[i]];
     }
 
-    const timeline = gsap.timeline();
+    let timeline: gsap.core.Timeline | null = null;
+    let fadeOutTween: gsap.core.Tween | null = null;
+    let timeoutId: NodeJS.Timeout | null = null;
 
-    cells.forEach((cell, index) => {
-      const cellElement = document.querySelector(`[data-cell-id="${cell.id}"]`);
-      if (cellElement) {
-        // 完全ランダムな遅延時間（0〜2秒の範囲）
-        const staggerDelay = Math.random() * 2;
-        timeline.to(cellElement, {
-          opacity: 0,
-          duration: 0.6,
-          ease: "power2.in",
-        }, staggerDelay);
-      }
-    });
+    // DOM要素が確実にレンダリングされた後にアニメーションを開始
+    const startAnimation = () => {
+      timeline = gsap.timeline();
 
-    timeline.eventCallback("onComplete", () => {
-      setIsAnimating(false);
-      onComplete?.();
+      cells.forEach((cell) => {
+        const cellElement = document.querySelector(`[data-cell-id="${cell.id}"]`);
+        if (cellElement) {
+          // 完全ランダムな遅延時間（0〜0.8秒の範囲）に短縮
+          const staggerDelay = Math.random() * 0.8;
+          timeline!.to(cellElement, {
+            opacity: 0,
+            duration: 0.3, // 0.6秒から0.3秒に短縮
+            ease: "power2.in",
+          }, staggerDelay);
+        }
+      });
+
+      timeline.eventCallback("onComplete", () => {
+        setIsAnimating(false);
+        // 全てのセルがフェードアウトした後、1秒待ってからフェードアウト
+        timeoutId = setTimeout(() => {
+          if (contentRef.current) {
+            fadeOutTween = gsap.to(contentRef.current, {
+              opacity: 0,
+              duration: 0.5,
+              ease: "power2.out",
+              onComplete: () => {
+                onComplete?.();
+              }
+            });
+          } else {
+            onComplete?.();
+          }
+        }, 1000); // 1秒待機
+      });
+    };
+
+    // レンダリング完了を待つ（2フレーム待機）
+    const rafId = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        startAnimation();
+      });
     });
 
     return () => {
-      timeline.kill();
-    }
+      cancelAnimationFrame(rafId);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      if (timeline) {
+        timeline.kill();
+      }
+      if (fadeOutTween) {
+        fadeOutTween.kill();
+      }
+    };
 
-  }, [onComplete, CELL_SIZE]);
+  }, [cols, rows, onComplete]);
 
   if (cols === 0 || rows === 0) {
     return (
@@ -94,7 +138,7 @@ const Loading: React.FC<LoadingContentProps> = ({ onComplete }) => {
 
       <div
         ref={containerRef}
-        className="absolute inset-0 z-1"
+        className="absolute inset-0 z-10"
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${cols}, ${CELL_SIZE}px)`,
@@ -109,7 +153,8 @@ const Loading: React.FC<LoadingContentProps> = ({ onComplete }) => {
             data-cell-id={index}
             className="bg-[#fcfcfc]"
             style={{
-              willChange: "opacity, transform",
+              opacity: 1,
+              willChange: "opacity",
             }}
           />
         ))}
