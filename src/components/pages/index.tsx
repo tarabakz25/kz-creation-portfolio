@@ -11,26 +11,48 @@ import Blog from './Blog';
 type Page = 'home' | 'profile' | 'activity' | 'blog';
 
 export default function IndexContent() {
-  const [isLoading, setIsLoading] = useState(true);
+  // 初回アクセスかどうかをチェック
+  const hasVisited = typeof window !== 'undefined' && sessionStorage.getItem('hasVisited') === 'true';
+  const [isLoading, setIsLoading] = useState(!hasVisited);
+  const [justFinishedLoading, setJustFinishedLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [isMigrating, setIsMigrating] = useState(false);
   const [nextPage, setNextPage] = useState<Page | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const pageContentRef = useRef<HTMLDivElement>(null);
 
+  // サイトを離れる時にフラグをクリア
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      sessionStorage.removeItem('hasVisited');
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   useEffect(() => {
     if (!isLoading && contentRef.current) {
       // コンテンツをフェードイン
-      gsap.fromTo(contentRef.current, 
-        { opacity: 0 },
-        { 
-          opacity: 1, 
-          duration: 0.6,
-          ease: "power2.out"
-        }
-      );
+      if (justFinishedLoading) {
+        // ローディング完了直後の場合はフェードイン
+        gsap.fromTo(contentRef.current, 
+          { opacity: 0 },
+          { 
+            opacity: 1, 
+            duration: 0.6,
+            ease: "power2.out"
+          }
+        );
+        setJustFinishedLoading(false);
+      } else if (hasVisited) {
+        // 既にアクセス済みの場合は即座に表示
+        gsap.set(contentRef.current, { opacity: 1 });
+      }
     }
-  }, [isLoading]);
+  }, [isLoading, hasVisited, justFinishedLoading]);
 
   // ページ変更時のフェードイン
   useEffect(() => {
@@ -86,12 +108,21 @@ export default function IndexContent() {
     }
   };
 
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+    setJustFinishedLoading(true);
+    // ローディング完了後、アクセス済みフラグを設定
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('hasVisited', 'true');
+    }
+  };
+
   return (
     <div className="w-full min-h-screen flex flex-col bg-[#252525]">
       {isLoading ? (
-        <Loading onComplete={() => setIsLoading(false)} />
+        <Loading onComplete={handleLoadingComplete} />
       ) : (
-        <div ref={contentRef} className="opacity-0 w-full min-h-screen flex flex-col">
+        <div ref={contentRef} className={hasVisited ? "w-full min-h-screen flex flex-col" : "opacity-0 w-full min-h-screen flex flex-col"}>
           <Header onPageChange={handlePageChange} currentPage={currentPage} />
           <div ref={pageContentRef} className="flex-1">
             {renderPageContent()}
