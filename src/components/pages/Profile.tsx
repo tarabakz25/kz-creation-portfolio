@@ -1,8 +1,9 @@
 import React from 'react';
+import Footer from '../layouts/Footer';
 
 export default function Profile() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white p-8">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white p-8 pt-32">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-5xl font-bold mb-12 text-center">プロフィール</h1>
         
@@ -59,6 +60,7 @@ export default function Profile() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
