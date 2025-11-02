@@ -44,14 +44,19 @@ const Loading: React.FC<LoadingContentProps> = ({ onComplete }) => {
       }
     }
 
-    cells.sort((a, b) => a.distance - b.distance);
+    // 完全ランダムにシャッフル
+    for (let i = cells.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cells[i], cells[j]] = [cells[j], cells[i]];
+    }
 
     const timeline = gsap.timeline();
 
     cells.forEach((cell, index) => {
       const cellElement = document.querySelector(`[data-cell-id="${cell.id}"]`);
       if (cellElement) {
-        const staggerDelay = (index / cells.length) * 1.5 + (Math.random() * 0.5) * 0.3;
+        // 完全ランダムな遅延時間（0〜2秒の範囲）
+        const staggerDelay = Math.random() * 2;
         timeline.to(cellElement, {
           opacity: 0,
           duration: 0.6,

@@ -1,8 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import IndexContent  from '~/components/pages/Index';
+import IndexContent from '~/components/pages/Index.tsx';
 ---
 
 <Layout>
-  <IndexContent />
+  <IndexContent client:load />
 </Layout>
