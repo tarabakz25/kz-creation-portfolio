@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import gsap from 'gsap';
 
-import titleTextImage from '~/assets/images/kz_creation.svg?url';
+import titleTextImage from '~/assets/kz_creation.svg?url';
 
 interface Cell {
   id: number;

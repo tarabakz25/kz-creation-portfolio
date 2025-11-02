@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaXTwitter, FaGithub } from 'react-icons/fa6';
-import titleImage from '~/assets/images/kz_creation.svg?url';
+import titleImage from '~/assets/kz_creation.svg?url';
 
 type Page = 'home' | 'profile' | 'activity' | 'blog';
 
