@@ -1,156 +1,116 @@
-import React, { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import kzCreationSvg from '../../assets/images/kz_creation.svg?url';
+import React, { useEffect, useState, useRef } from 'react';
+import gsap from 'gsap';
 
-type Props = {
-  gridSize?: number;
-  className?: string;
+import titleTextImage from '~/assets/images/kz_creation.svg?url';
+
+interface Cell {
+  id: number;
+  row: number;
+  col: number;
+  distance: number;
+}
+
+interface LoadingContentProps {
   onComplete?: () => void;
-};
+}
 
-const Loading: React.FC<Props> = ({ gridSize = 40, className = '', onComplete }: Props) => {
+const Loading: React.FC<LoadingContentProps> = ({ onComplete }) => {
+  const contentRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<HTMLImageElement>(null);
-  const cellsRef = useRef<HTMLDivElement[]>([]);
+  const [isAnimating, setIsAnimating] = useState(true);
+  const [cols, setCols] = useState(0);
+  const [rows, setRows] = useState(0);
+  
+  const GRID_SIZE = 24;
+  const CELL_SIZE = 40;
 
   useEffect(() => {
-    if (!containerRef.current || !gridRef.current) return;
+    if (typeof window === 'undefined') return;
 
-    const container = containerRef.current;
-    const cols = Math.ceil(container.offsetWidth / gridSize);
-    const rows = Math.ceil(container.offsetHeight / gridSize);
-    const totalCells = cols * rows;
+    const calculatedCols = Math.ceil(window.innerWidth / CELL_SIZE);
+    const calculatedRows = Math.ceil(window.innerHeight / CELL_SIZE);
+    setCols(calculatedCols);
+    setRows(calculatedRows);
 
-    // グリッドセルを生成
-    const cells: HTMLDivElement[] = [];
-    gridRef.current.innerHTML = '';
+    const centerX = Math.floor(calculatedCols / 2);
+    const centerY = Math.floor(calculatedRows / 2);
 
-    for (let i = 0; i < totalCells; i++) {
-      const cell = document.createElement('div');
-      cell.style.width = `${gridSize}px`;
-      cell.style.height = `${gridSize}px`;
-      cell.style.backgroundColor = '#252525';
-      cell.style.border = 'none';
-      cell.style.margin = '0';
-      cell.style.padding = '0';
-      gridRef.current.appendChild(cell);
-      cells.push(cell);
+    const cells: Cell[] = [];
+    let id = 0;
+    for (let row = 0; row < calculatedRows; row ++) {
+      for (let col = 0; col < calculatedCols; col ++) {
+        const distance = Math.hypot(col - centerX, row - centerY);
+        cells.push({ id: id++, row, col, distance });
+      }
     }
 
-    cellsRef.current = cells;
+    cells.sort((a, b) => a.distance - b.distance);
 
-    // 各セルの中心からの距離を計算
-    const centerX = cols / 2;
-    const centerY = rows / 2;
-    const cellDistances: Array<{ cell: HTMLDivElement; distance: number; index: number }> = [];
+    const timeline = gsap.timeline();
 
     cells.forEach((cell, index) => {
-      const col = index % cols;
-      const row = Math.floor(index / cols);
-      const distance = Math.sqrt(
-        Math.pow(col - centerX, 2) + Math.pow(row - centerY, 2)
-      );
-      cellDistances.push({ cell, distance, index });
-    });
-
-    // 距離でソート（外側から内側へ）
-    cellDistances.sort((a, b) => b.distance - a.distance);
-
-    // 距離グループに分ける（同じ距離のセルをグループ化）
-    const distanceGroups: HTMLDivElement[][] = [];
-    let currentGroup: HTMLDivElement[] = [];
-    let currentDistance = cellDistances[0].distance;
-
-    cellDistances.forEach(({ cell, distance }) => {
-      if (Math.abs(distance - currentDistance) < 0.1) {
-        currentGroup.push(cell);
-      } else {
-        if (currentGroup.length > 0) {
-          distanceGroups.push([...currentGroup]);
-        }
-        currentGroup = [cell];
-        currentDistance = distance;
-      }
-    });
-    if (currentGroup.length > 0) {
-      distanceGroups.push(currentGroup);
-    }
-
-    // 各グループ内でランダムにシャッフル
-    distanceGroups.forEach((group) => {
-      for (let i = group.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [group[i], group[j]] = [group[j], group[i]];
+      const cellElement = document.querySelector(`[data-cell-id="${cell.id}"]`);
+      if (cellElement) {
+        const staggerDelay = (index / cells.length) * 1.5 + (Math.random() * 0.5) * 0.3;
+        timeline.to(cellElement, {
+          opacity: 0,
+          duration: 0.6,
+          ease: "power2.in",
+        }, staggerDelay);
       }
     });
 
-    // GSAPアニメーション
-    const tl = gsap.timeline({
-      onComplete: () => {
-        onComplete?.();
-      },
+    timeline.eventCallback("onComplete", () => {
+      setIsAnimating(false);
+      onComplete?.();
     });
 
-    // 各グループを順番にアニメーション（外側から内側へ）
-    distanceGroups.forEach((group, groupIndex) => {
-      group.forEach((cell, cellIndex) => {
-        const delay = groupIndex * 0.02 + (cellIndex / group.length) * 0.01;
-        tl.to(
-          cell,
-          {
-            backgroundColor: '#FFFFFF',
-            duration: 0.3,
-            ease: 'power2.out',
-          },
-          delay
-        );
-      });
-    });
-
-    // SVGのアニメーション（グリッドの進行に合わせて色を変更）
-    if (svgRef.current) {
-      const totalDuration = distanceGroups.length * 0.02 + 0.3;
-      tl.to(
-        svgRef.current,
-        {
-          filter: 'brightness(0) invert(1)',
-          duration: totalDuration * 0.8,
-          ease: 'power2.inOut',
-        },
-        0
-      );
+    return () => {
+      timeline.kill();
     }
-  }, [gridSize, onComplete]);
+
+  }, [onComplete, CELL_SIZE]);
+
+  if (cols === 0 || rows === 0) {
+    return (
+      <div className="relative w-full h-screen overflow-hidden bg-[#252525]" ref={contentRef}>
+        <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
+          <img src={titleTextImage} alt="Loading..." className="w-64 h-auto" />
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div
-      ref={containerRef}
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-[#252525] ${className}`}
-    >
-      {/* グリッド */}
-      <div
-        ref={gridRef}
-        className="absolute inset-0 flex flex-wrap"
-        style={{
-          width: '100%',
-          height: '100%',
-        }}
-      />
+    <div className="relative w-full h-screen overflow-hidden bg-[#252525]" ref={contentRef}>
+      <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
+        <img src={titleTextImage} alt="Loading..." className="w-64 h-auto" />
+      </div>
 
-      {/* 中央のSVG */}
-      <img
-        ref={svgRef}
-        src={kzCreationSvg}
-        alt="Kz Creation"
-        className="relative z-10 max-w-[80%] max-h-[80%] w-auto h-auto"
+      <div
+        ref={containerRef}
+        className="absolute inset-0 z-1"
         style={{
-          filter: 'brightness(0)',
-          mixBlendMode: 'difference',
+          display: "grid",
+          gridTemplateColumns: `repeat(${cols}, ${CELL_SIZE}px)`,
+          gridTemplateRows: `repeat(${rows}, ${CELL_SIZE}px)`,
+          gap: "0",
+          padding: "0",
         }}
-      />
+      >
+        {Array.from({ length: rows * cols }).map((_, index) => (
+          <div
+            key={index}
+            data-cell-id={index}
+            className="bg-[#fcfcfc]"
+            style={{
+              willChange: "opacity, transform",
+            }}
+          />
+        ))}
+      </div>
     </div>
-  );
-};
+  )
+}
 
 export default Loading;
