@@ -4,6 +4,8 @@ import Header from '../layouts/Header';
 import Footer from '../layouts/Footer';
 import Loading from '../layouts/Loading';
 import ScreenMigration from '../layouts/ScreenMigration';
+import MotionBackground from '../layouts/MotionBackground';
+
 import Home from './Home';
 import Profile from './Profile';
 import Activity from './Activity';
@@ -169,24 +171,27 @@ export default function IndexContent() {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col main-bg overflow-hidden">
-      {isLoading ? (
-        <Loading onComplete={handleLoadingComplete} />
-      ) : (
-        <div ref={contentRef} className={hasVisited ? "w-full h-screen flex flex-col overflow-hidden" : "opacity-0 w-full h-screen flex flex-col overflow-hidden"}>
-          <Header onPageChange={handlePageChange} currentPage={currentPage} />
-          <div ref={pageContentRef} className="flex-1 overflow-hidden">
-            {renderPageContent()}
+    <>
+      <MotionBackground client:load />
+      <div className="w-full h-screen flex flex-col overflow-hidden">
+        {isLoading ? (
+          <Loading onComplete={handleLoadingComplete} />
+        ) : (
+          <div ref={contentRef} className={hasVisited ? "w-full h-screen flex flex-col overflow-hidden" : "opacity-0 w-full h-screen flex flex-col overflow-hidden"}>
+            <Header onPageChange={handlePageChange} currentPage={currentPage} />
+            <div ref={pageContentRef} className="flex-1 overflow-hidden">
+              {renderPageContent()}
+            </div>
+            <Footer />
           </div>
-          <Footer />
-        </div>
-      )}
-      {isMigrating && (
-        <ScreenMigration 
-          onFadeInComplete={handleFadeInComplete}
-          onFadeOutComplete={handleFadeOutComplete}
-        />
-      )}
-    </div>
+        )}
+        {isMigrating && (
+          <ScreenMigration 
+            onFadeInComplete={handleFadeInComplete}
+            onFadeOutComplete={handleFadeOutComplete}
+          />
+        )}
+      </div>
+    </>
   )
 }

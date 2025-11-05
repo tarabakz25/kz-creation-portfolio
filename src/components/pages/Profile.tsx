@@ -13,7 +13,7 @@ const awards = [
 
 const Profile: React.FC = () => {
   return (
-    <div className="h-screen w-full flex flex-col main-bg items-center justify-center gap-16 ">
+    <div className="h-screen w-full flex flex-col items-center justify-center gap-16 ">
       <div className="w-full flex items-center justify-center gap-8">
         <img src={ProfileIcon} alt="profile icon" className="w-48 h-48 object-cover rounded-3xl" />
         <div className="flex flex-col main-fg gap-2">
