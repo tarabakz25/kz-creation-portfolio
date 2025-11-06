@@ -92,13 +92,9 @@ export default function Activity() {
     // ホイールイベント
     const handleWheel = (e: WheelEvent) => {
       const rect = container.getBoundingClientRect();
-      const withinBounds =
-        e.clientX >= rect.left &&
-        e.clientX <= rect.right &&
-        e.clientY >= rect.top &&
-        e.clientY <= rect.bottom;
+      const withinVerticalBounds = e.clientY >= rect.top && e.clientY <= rect.bottom;
 
-      if (!withinBounds) {
+      if (!withinVerticalBounds) {
         return;
       }
 
