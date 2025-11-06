@@ -47,7 +47,6 @@ export default function Activity() {
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<HTMLDivElement[]>([]);
   const scrollPositionRef = useRef(0);
-  const isPointerInsideRef = useRef(false);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -90,20 +89,22 @@ export default function Activity() {
       });
     };
 
-    const handlePointerEnter = () => {
-      isPointerInsideRef.current = true;
-    };
-
-    const handlePointerLeave = () => {
-      isPointerInsideRef.current = false;
-    };
-
-    container.addEventListener("pointerenter", handlePointerEnter);
-    container.addEventListener("pointerleave", handlePointerLeave);
-
     // ホイールイベント
     const handleWheel = (e: WheelEvent) => {
-      if (!isPointerInsideRef.current) {
+      const rect = container.getBoundingClientRect();
+      const withinVerticalBounds = e.clientY >= rect.top && e.clientY <= rect.bottom;
+      let isPointerInside = false;
+
+      if (e.target instanceof Node && container.contains(e.target)) {
+        isPointerInside = true;
+      } else {
+        const elementAtPoint = document.elementFromPoint(e.clientX, e.clientY);
+        if (elementAtPoint && container.contains(elementAtPoint)) {
+          isPointerInside = true;
+        }
+      }
+
+      if (!isPointerInside && !withinVerticalBounds) {
         return;
       }
 
@@ -118,8 +119,6 @@ export default function Activity() {
 
     return () => {
       window.removeEventListener("wheel", handleWheel);
-      container.removeEventListener("pointerenter", handlePointerEnter);
-      container.removeEventListener("pointerleave", handlePointerLeave);
     };
   }, []);
 
