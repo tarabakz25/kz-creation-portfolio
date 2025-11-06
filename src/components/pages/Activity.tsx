@@ -91,25 +91,11 @@ export default function Activity() {
 
     // ホイールイベント
     const handleWheel = (e: WheelEvent) => {
-      const rect = container.getBoundingClientRect();
-      const withinVerticalBounds = e.clientY >= rect.top && e.clientY <= rect.bottom;
-      let isPointerInside = false;
-
-      if (e.target instanceof Node && container.contains(e.target)) {
-        isPointerInside = true;
-      } else {
-        const elementAtPoint = document.elementFromPoint(e.clientX, e.clientY);
-        if (elementAtPoint && container.contains(elementAtPoint)) {
-          isPointerInside = true;
-        }
-      }
-
-      if (!isPointerInside && !withinVerticalBounds) {
-        return;
-      }
-
+      // カーソル位置に依存せず常にタイムラインをスクロール
       e.preventDefault();
-      scrollPositionRef.current = Math.max(0, Math.min(maxScroll, scrollPositionRef.current + e.deltaY * 0.5));
+      const rawDelta = (typeof e.deltaY === 'number') ? e.deltaY : 0;
+      const delta = rawDelta === 0 && (e as any).wheelDelta ? -(e as any).wheelDelta : rawDelta;
+      scrollPositionRef.current = Math.max(0, Math.min(maxScroll, scrollPositionRef.current + delta * 0.5));
       updateItems();
     };
 
