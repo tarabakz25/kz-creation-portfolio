@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from 'recharts';
 
-import ProfileIcon from '~/assets/images/u3629887153_a_short-haired_anime_boy_sitting_wearing_a_black__7ac53e52-ff93-4e02-8942-30490f55db56_0.png?url';
+import ProfileIcon from '~/assets/images/u3629887153_a_short-haired_anime_boy_sitting_wearing_a_black__7ac53e52-ff93-4e02-8942-30490f55db56_0.webp?url';
 
 export type ProfileData = CollectionEntry<'profile'>['data'];
 

@@ -16,7 +16,7 @@ const Works: React.FC = () => {
     const loadWorks = async () => {
       const workModules = import.meta.glob<{ default: Omit<WorkData, 'image'> & { image: string } }>('/src/content/works/*.json', { eager: true });
       
-      const imageModules = import.meta.glob<{ default: ImageMetadata }>('/src/assets/content/works/*.{png,jpg,jpeg,svg}', { eager: true });
+      const imageModules = import.meta.glob<{ default: ImageMetadata }>('/src/assets/content/works/*.{png,jpg,jpeg,svg,webp}', { eager: true });
 
       const loadedWorks = Object.values(workModules).map((mod) => {
         const data = mod.default;
