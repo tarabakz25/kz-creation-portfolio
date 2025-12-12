@@ -56,12 +56,12 @@ const ContactDialog: React.FC<ContactDialogProps> = ({ open, onOpenChange }) => 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-[#101010] main-fg">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-[#101010] main-fg border-none">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center font-eurostile">Contact Me</DialogTitle>
         </DialogHeader>
 
-        <div className="flex flex-col items-center gap-4 py-6 border-b">
+        <div className="flex flex-col items-center gap-4 py-6">
           <div className="flex items-center justify-center gap-6">
             <a
               href="https://twitter.com/kz25_kmc/"
