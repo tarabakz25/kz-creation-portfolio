@@ -1,27 +1,17 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import IndexContent from '~/components/pages/Index.tsx';
-import { getCollection, getEntry } from 'astro:content';
+import Layout from "../layouts/Layout.astro";
+import Footer from "~/components/layouts/Footer.astro";
+import IndexContent from "~/components/pages/Index.tsx";
+import { getEntry } from "astro:content";
 
-const profileEntry = await getEntry('profile', 'kizuki-aiki');
+const profileEntry = await getEntry("profile", "kizuki-aiki");
 
 if (!profileEntry) {
-  throw new Error('Profile content entry not found.');
+    throw new Error("Profile content entry not found.");
 }
-
-const activityEntries = await getCollection('activity');
-const activityItems = activityEntries
-  .sort((a, b) => a.data.sortDate.getTime() - b.data.sortDate.getTime())
-  .map((entry) => ({
-    id: entry.id,
-    date: entry.data.dateLabel,
-    period: entry.data.period,
-    title: entry.data.title,
-    description: entry.data.description,
-    tags: entry.data.tags,
-  }));
 ---
 
 <Layout>
-  <IndexContent client:load profileData={profileEntry.data} activityItems={activityItems} />
+    <IndexContent client:load profileData={profileEntry.data} />
+    <Footer />
 </Layout>

@@ -4,6 +4,7 @@ export type Article = {
   title: string;
   url: string;
   publishedAt?: string;
+  imageUrl?: string;
 }
 
 export const GET: APIRoute = async ({ request }) => {
@@ -40,6 +41,7 @@ export const GET: APIRoute = async ({ request }) => {
         const title = item?.name || item?.title || '';
         const key = item?.key || '';
         const publishAt = item?.publishAt || item?.publishedAt || '';
+        const eyecatch = item?.eyecatch || item?.thumbnail || '';
         
         // URLの構築: https://note.com/{username}/n/{key}
         const articleUrl = key 
@@ -50,6 +52,7 @@ export const GET: APIRoute = async ({ request }) => {
           title,
           url: articleUrl,
           publishedAt: publishAt,
+          imageUrl: eyecatch,
         };
       })
       .filter((article: Article) => article.title && article.url)
