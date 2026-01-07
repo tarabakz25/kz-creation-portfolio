@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Infomatic AI -JAPAN AI HACKATHON 2025-",
+    "url": "",
+    "image": "~/assets/content/works/japan-ai-hackathon-2025.webp",
+    "tags": ["hackathon", "web", "award"]
+  },
+  {
+    "name": "Adobe MAX 2023",
+    "url": "",
+    "image": "~/assets/content/works/adobe-max-2023.webp",
+    "tags": ["hackathon", "web"]
+  },
+  {
+    "name": "ESG Data Hub",
+    "url": "https://esg.com",
+    "image": "~/assets/content/works/esg.webp",
+    "tags": ["hackathon", "web"]
+  },
+  {
+    "name": "KZ Creation",
+    "url": "",
+    "image": "~/assets/content/works/kz-creation.webp",
+    "tags": ["Portfolio", "Web"]
+  },
+  {
+    "name": "KanikanLab",
+    "url": "",
+    "image": "~/assets/content/works/kanikanlab.webp",
+    "tags": ["Portfolio", "Web"]
+  },
+  {
+    "name": "Business Card",
+    "url": "",
+    "image": "~/assets/content/works/business-card.webp",
+    "tags": ["design", "figma"]
+  }
+]

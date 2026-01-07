@@ -2,6 +2,7 @@ import { useState } from "react";
 import Header from "~/components/header";
 import Footer from "~/components/footer";
 import Modal from "~/components/modal";
+import CursorEffect from "~/components/cursorEffect";
 import Logo from "~/assets/kz_creation.svg";
 
 export default function App() {
@@ -12,9 +13,11 @@ export default function App() {
       id="main-content"
       className="w-full h-screen flex flex-col items-center justify-between"
     >
+      {/*<CursorEffect />*/}
+      
       <Header onNavigate={setActiveContent} />
 
-      <Logo />
+      <img src={Logo.src} alt="logo" />
 
       <Modal
         contentType={activeContent}

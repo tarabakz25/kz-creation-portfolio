@@ -39,18 +39,7 @@ const activity = defineCollection({
   }),
 });
 
-const works = defineCollection({
-  type: "data",
-  schema: z.object({
-    name: z.string(),
-    url: z.string(),
-    image: z.string(),
-    tags: z.array(z.string()),
-  }),
-});
-
 export const collections = {
   profile,
   activity,
-  works,
 };
