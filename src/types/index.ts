@@ -10,12 +10,7 @@
 /**
  * アプリケーション内のページタイプ
  */
-export type Page = 'home' | 'profile' | 'activity' | 'works';
-
-/**
- * ページ変更ハンドラー
- */
-export type PageChangeHandler = (page: Page) => void;
+export type Page = "home" | "profile" | "works";
 
 // ========================================
 // Grid Animation Types

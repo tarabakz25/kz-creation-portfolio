@@ -1,49 +1,77 @@
 ---
-import { Analytics } from '@vercel/analytics/react';
-import '../styles/global.css';
+import { Analytics } from "@vercel/analytics/react";
+import { ViewTransitions } from "astro:transitions";
+import ViewTransitionGrid from "~/components/layouts/ViewTransitionGrid";
+import Loading from "~/components/layouts/Loading";
+import "../styles/global.css";
 ---
+
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.jpg" />
-		<meta name="generator" content={Astro.generator} />
-		<Analytics />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			rel="stylesheet"
-			href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap"
-		/>
-		<script is:inline>
-			(function(d) {
-				var config = {
-					kitId: 'vza3sdw',
-					scriptTimeout: 3000,
-					async: true
-				},
-				h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
-			})(document);
-		</script>
-		<title>Kz Creation</title>
-	</head>
-	<body>
-		<div id="smooth-wrapper">
-			<div id="smooth-content">
-				<slot />
-			</div>
-		</div>
-	</body>
-
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      height: 100%;
-      position: fixed;
-      width: 100%;
-    }
-  </style>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.jpg" />
+    <meta name="generator" content={Astro.generator} />
+    <Analytics />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap"
+    />
+    <script is:inline>
+      (function (d) {
+        var config = {
+            kitId: "vza3sdw",
+            scriptTimeout: 3000,
+            async: true,
+          },
+          h = d.documentElement,
+          t = setTimeout(function () {
+            h.className =
+              h.className.replace(/\bwf-loading\b/g, "") + " wf-inactive";
+          }, config.scriptTimeout),
+          tk = d.createElement("script"),
+          f = false,
+          s = d.getElementsByTagName("script")[0],
+          a;
+        h.className += " wf-loading";
+        tk.src = "https://use.typekit.net/" + config.kitId + ".js";
+        tk.async = true;
+        tk.onload = tk.onreadystatechange = function () {
+          a = this.readyState;
+          if (f || (a && a != "complete" && a != "loaded")) return;
+          f = true;
+          clearTimeout(t);
+          try {
+            Typekit.load(config);
+          } catch (e) {}
+        };
+        s.parentNode.insertBefore(tk, s);
+      })(document);
+    </script>
+    <script is:inline>
+      const hasVisited = sessionStorage.getItem("hasVisited") === "true";
+      if (!hasVisited) {
+        document.documentElement.setAttribute("data-first-visit", "true");
+      }
+    </script>
+    <ViewTransitions />
+    <title>Kz Creation</title>
+  </head>
+  <body class="m-0 p-0 overflow-auto min-h-screen w-full">
+    <Loading client:only="react" />
+    <ViewTransitionGrid client:load transition:persist />
+    <div id="main-content">
+      <slot />
+    </div>
+  </body>
 </html>
+
+<style is:global>
+  html[data-first-visit] #main-content {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>

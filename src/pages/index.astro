@@ -1,17 +1,15 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Footer from "~/components/layouts/Footer.astro";
-import IndexContent from "~/components/pages/Index.tsx";
-import { getEntry } from "astro:content";
-
-const profileEntry = await getEntry("profile", "kizuki-aiki");
-
-if (!profileEntry) {
-    throw new Error("Profile content entry not found.");
-}
+import Layout from "~/layouts/Layout.astro";
+import Header from "~/components/layouts/Header";
+import MotionBackground from "~/components/layouts/MotionBackground";
 ---
 
 <Layout>
-    <IndexContent client:load profileData={profileEntry.data} />
-    <Footer />
+  <MotionBackground client:load transition:persist transition:name="bg" />
+  <Header client:load currentPage="home" />
+  <main
+    class="w-full h-screen flex items-center justify-center"
+    transition:animate="fade"
+  >
+  </main>
 </Layout>

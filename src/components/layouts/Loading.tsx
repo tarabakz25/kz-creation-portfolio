@@ -27,10 +27,16 @@ const Loading: React.FC<LoadingContentProps> = ({ onComplete }) => {
           duration: 0.5,
           ease: "power2.out",
           onComplete: () => {
+            // Set session flag and remove data attribute
+            sessionStorage.setItem("hasVisited", "true");
+            document.documentElement.removeAttribute("data-first-visit");
             onComplete?.();
           },
         });
       } else {
+        // Set session flag and remove data attribute
+        sessionStorage.setItem("hasVisited", "true");
+        document.documentElement.removeAttribute("data-first-visit");
         onComplete?.();
       }
     },

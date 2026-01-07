@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import titleImage from "~/assets/kz_creation.svg?url";
 import ContactDialog from "./ContactDialog";
 import { HoverCornerButton } from "~/components/ui/hover-corner-button";
@@ -14,33 +14,30 @@ import {
 import type { Page } from "~/types";
 
 interface HeaderProps {
-  onPageChange: (page: Page) => void;
   currentPage: Page;
 }
 
-/**
- * ナビゲーション項目の定義
- */
 const NAV_ITEMS = [
-  { page: "profile" as const, label: "Profile" },
-  { page: "activity" as const, label: "Note" },
-  { page: "works" as const, label: "Works" },
+  { page: "home" as const, label: "Home", href: "/" },
+  { page: "profile" as const, label: "Profile", href: "/profile" },
+  { page: "works" as const, label: "Works", href: "/works" },
 ];
 
-/**
- * ヘッダーコンポーネント
- * ナビゲーションとコンタクトダイアログを提供
- */
-const Header: React.FC<HeaderProps> = ({ onPageChange, currentPage }) => {
+const Header: React.FC<HeaderProps> = ({ currentPage }) => {
   const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handlePageChange = (page: Page) => {
-    if (currentPage !== page) {
-      onPageChange(page);
+  // Close mobile menu on page navigation
+  useEffect(() => {
+    const handlePageLoad = () => {
       setIsMobileMenuOpen(false);
-    }
-  };
+    };
+
+    document.addEventListener("astro:page-load", handlePageLoad);
+    return () => {
+      document.removeEventListener("astro:page-load", handlePageLoad);
+    };
+  }, []);
 
   const handleContactClick = () => {
     setIsContactDialogOpen(true);
@@ -51,27 +48,21 @@ const Header: React.FC<HeaderProps> = ({ onPageChange, currentPage }) => {
     <>
       <header className="fixed top-0 w-full h-24 flex items-center justify-between px-4 sm:px-6 md:px-8 z-20">
         <div className="flex items-center">
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              handlePageChange("home");
-            }}
-          >
+          <a href="/" data-astro-prefetch>
             <img src={titleImage} alt="title image" className="h-8 sm:h-10" />
           </a>
         </div>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 items-center justify-center text-[#FCFCFC] font-eurostile font-regular text-xl gap-12">
-          {NAV_ITEMS.map(({ page, label }) => (
-            <HoverCornerButton
-              key={page}
-              onClick={() => handlePageChange(page)}
-              className="px-2 py-2"
-            >
-              {label}
-            </HoverCornerButton>
+          {NAV_ITEMS.map(({ page, label, href }) => (
+            <a key={page} href={href} data-astro-prefetch>
+              <HoverCornerButton
+                className={`px-2 py-2 ${currentPage === page ? "opacity-100" : "opacity-70"}`}
+              >
+                {label}
+              </HoverCornerButton>
+            </a>
           ))}
         </div>
 
@@ -102,24 +93,17 @@ const Header: React.FC<HeaderProps> = ({ onPageChange, currentPage }) => {
                 </SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-4 mt-8">
-                <button
-                  onClick={() => handlePageChange("home")}
-                  className={`text-left px-4 py-3 text-[#FCFCFC] font-eurostile text-lg transition-colors ${
-                    currentPage === "home" ? "text-[#E5E5E5]" : ""
-                  } hover:text-[#E5E5E5]`}
-                >
-                  Home
-                </button>
-                {NAV_ITEMS.map(({ page, label }) => (
-                  <button
+                {NAV_ITEMS.map(({ page, label, href }) => (
+                  <a
                     key={page}
-                    onClick={() => handlePageChange(page)}
+                    href={href}
+                    data-astro-prefetch
                     className={`text-left px-4 py-3 text-[#FCFCFC] font-eurostile text-lg transition-colors ${
                       currentPage === page ? "text-[#E5E5E5]" : ""
                     } hover:text-[#E5E5E5]`}
                   >
                     {label}
-                  </button>
+                  </a>
                 ))}
                 <button
                   onClick={handleContactClick}
