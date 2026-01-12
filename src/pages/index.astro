@@ -1,7 +1,11 @@
 ---
 import Layout from "~/layouts/Layout.astro";
 import Shader from "~/components/shader.tsx";
-import App from "~/components/App.tsx";
+
+import Header from "~/components/header.tsx";
+import Footer from "~/components/footer.tsx";
+
+import Logo from "~/assets/kz_creation.svg";
 ---
 
 <Layout>
@@ -9,5 +13,11 @@ import App from "~/components/App.tsx";
     <Shader client:load />
   </div>
 
-  <App client:load />
+  <div class="flex flex-col items-center justify-between w-full h-screen">
+    <Header client:load />
+
+    <img src={Logo.src} alt="KZ Creation Logo" />
+
+    <Footer />
+  </div>
 </Layout>

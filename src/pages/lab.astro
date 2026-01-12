@@ -1,0 +1,44 @@
+---
+import Layout from "~/layouts/Layout.astro";
+import WorkCard from "~/components/WorkCard";
+import worksData from "~/content/works.json";
+
+// 画像をインポート
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  "~/assets/content/works/*.webp",
+  { eager: true },
+);
+
+// works.jsonのデータに対応する画像を紐付け
+const works = worksData.map((work) => {
+  const imagePath = work.image.replace("~/", "/src/");
+  const imageModule = images[imagePath];
+  return {
+    ...work,
+    imageData: imageModule?.default,
+  };
+});
+---
+
+<Layout>
+  <main class="w-full min-h-screen flex flex-col px-6 py-12">
+    <div class="max-w-7xl mx-auto w-full">
+      <h1 class="text-4xl font-bold text-white mb-8">Works</h1>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {
+          works.map((work) =>
+            work.imageData ? (
+              <WorkCard
+                name={work.name}
+                url={work.url}
+                image={work.imageData}
+                tags={work.tags}
+                client:load
+              />
+            ) : null,
+          )
+        }
+      </div>
+    </div>
+  </main>
+</Layout>

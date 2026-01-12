@@ -1,27 +1,27 @@
-import { useState, useLayoutEffect, use} from "react";
+import { useLayoutEffect, useState } from "react";
 import { Dithering } from "@paper-design/shaders-react";
 
 export default function Shader() {
-  const [size, setSize] = useState([0, 0]);
-  
+  const [size, setSize] = useState([1920, 1080]);
+
   useLayoutEffect(() => {
     const updateSize = () => {
       setSize([window.innerWidth, window.innerHeight]);
-    }
-    
-    window.addEventListener('resize', updateSize);
+    };
+
+    window.addEventListener("resize", updateSize);
     updateSize();
-    
+
     return () => {
-      window.removeEventListener('resize', updateSize);
-    }
+      window.removeEventListener("resize", updateSize);
+    };
   }, []);
-  
+
   return (
     <Dithering
       width={size[0]}
       height={size[1]}
-      colorBack="#000000"
+      colorBack="#131313"
       colorFront="#60949f"
       shape="warp"
       type="4x4"
