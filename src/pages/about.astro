@@ -1,0 +1,22 @@
+---
+import Layout from "~/layouts/Layout.astro";
+import Header from "~/components/header";
+import Footer from "~/components/footer";
+import AboutContent from "~/features/about";
+
+import Icon from "~/assets/images/icon2.webp";
+import Catchcopy from "~/assets/catchcopy.svg";
+---
+
+<Layout>
+  <Header slot="header" variant="content" client:load />
+  <AbouticonSrc={Icon.src} catchcopySrc={Catchcopy.src} client:load />
+  <Footer variant="content" />
+</Layout>
+
+<style>
+  :global(html),
+  :global(body) {
+    overflow: auto !important;
+  }
+</style>
