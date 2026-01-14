@@ -59,7 +59,7 @@ import SmoothScroll from "~/components/gsap/smoothScroll";
     </script>
     <title>Kz Creation</title>
   </head>
-  <body class="m-0 p-0 overflow-auto min-h-screen w-full cursor-none">
+  <body class="m-0 p-0 overflow-auto min-h-screen w-full">
     <slot name="header" />
     <div id="smooth-wrapper">
       <div id="smooth-content">
@@ -67,7 +67,6 @@ import SmoothScroll from "~/components/gsap/smoothScroll";
       </div>
     </div>
     <SmoothScroll client:load />
-    <ArrowPointer client:load />
     <Toaster client:load />
   </body>
 </html>
