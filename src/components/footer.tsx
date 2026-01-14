@@ -1,7 +1,18 @@
-import profile from "../content/profile/kizuki-aiki.json";
+import profile from '~/content/profile/kizuki-aiki.json';
 
-export default function FooterContent() {
-  return (
+interface Props {
+  valiant: string,
+};
+
+export default function Footer({ valiant }: Props) {
+  if (valiant === 'top') {
+    return (
+      <main className="px-16 py-6 w-full flex justify-between text-white font-comma">
+        <p>A developer</p>
+        <p>© Kz Creation</p>
+      </main>
+    )
+  } else {
     <footer className="w-full bg-[#131313] text-white py-20 flex flex-col items-center justify-center gap-8">
       <div className="w-full max-w-4xl h-[1px] bg-white/20 mb-8"></div>
       <div className="flex gap-12">
@@ -21,5 +32,5 @@ export default function FooterContent() {
         © 2026 Kz Creation
       </div>
     </footer>
-  );
+  }
 }
