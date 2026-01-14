@@ -1,12 +1,12 @@
 import Footer from "~/components/layouts/footer";
-import MenuItem from "./components/menuItem";
+import MenuItem from "../../components/layouts/menuItem";
 
 export default function IndexPage() {
   return (
-    <main className="relative min-h-screen">
+    <main className="min-h-screen px-[5vw] py-[10vh]">
       
-      <div className="relative flex flex-col items-start w-full min-h-screen text-white px-[5vw] py-[10vh] gap-4">
-        <h1 className="text-3xl font-futura_100 tracking-wider">Welcome to Kz Creation portfolio.</h1>
+      <div className="flex flex-col items-start w-full min-h-screen text-white gap-8">
+        <h1 className="text-3xl font-futura_pt tracking-wider">Welcome to Kz Creation portfolio.</h1>
         <MenuItem />
       </div>
       

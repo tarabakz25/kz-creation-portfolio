@@ -9,14 +9,5 @@ import Catchcopy from "~/assets/catchcopy.svg";
 ---
 
 <Layout>
-  <Header slot="header" variant="content" client:load />
-  <AbouticonSrc={Icon.src} catchcopySrc={Catchcopy.src} client:load />
-  <Footer variant="content" />
+  <AboutContent client:load />
 </Layout>
-
-<style>
-  :global(html),
-  :global(body) {
-    overflow: auto !important;
-  }
-</style>
