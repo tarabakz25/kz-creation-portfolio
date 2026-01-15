@@ -1,37 +1,9 @@
 ---
 import Layout from "~/layouts/Layout.astro";
-import Header from "~/components/header";
-import Footer from "~/components/footer";
-import LabContent from "~/features/lab";
-import worksData from "~/content/works.json";
+import LabPage from "~/features/lab";
 
-// Import images
-const images = import.meta.glob<{ default: ImageMetadata }>(
-  "~/assets/content/works/*.webp",
-  { eager: true },
-);
-
-// Process works data with images
-const works = worksData.map((work) => {
-  const imagePath = work.image.replace("~/", "/src/");
-  const imageModule = images[imagePath];
-  return {
-    ...work,
-    imageData: imageModule?.default,
-  };
-});
 ---
 
 <Layout>
-  <Header slot="header" variant="content" client:load />
-  <LabContent works={works} client:load />
-  <Footer variant="content" />
+  <LabPage client:load />
 </Layout>
-
-<style>
-  :global(html),
-  :global(body) {
-    overflow: auto !important;
-    background-color: #050505;
-  }
-</style>

@@ -1,11 +1,20 @@
 import { ContactForm } from "~/features/contact/components/contact-form";
+import MenuItem from "~/components/layouts/menuItem";
 
-export default function ContactContent() {
+export default function ContactPage() {
   return (
-    <main className="w-full min-h-screen flex flex-col items-center justify-start bg-[#131313] text-white pt-[20vh] pb-[10vh]">
-      <h1 className="text-5xl font-futura_pt mb-12">Contact</h1>
-
-      <ContactForm />
+    <main className="flex justify-between px-[5vw] py-[10vh] h-screen">
+      
+      <div className="flex flex-col items-start w-full min-h-screen text-white gap-8">
+        <h1 className="text-3xl font-futura_pt tracking-wider">Say HELLO !</h1>
+        <MenuItem />
+      </div>
+      
+      <div className="flex flex-col justify-center items-start w-full text-white gap-8">
+        <ContactForm />
+      </div>
+      
+      
     </main>
   );
 }

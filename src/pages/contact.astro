@@ -1,19 +1,8 @@
 ---
 import Layout from "~/layouts/Layout.astro";
-import Header from "~/components/header";
-import Footer from "~/components/footer";
-import ContactContent from "~/features/contact/";
+import ContactPage from "~/features/contact/";
 ---
 
 <Layout>
-  <Header slot="header" variant="content" client:load />
-  <ContactContent client:load />
-  <Footer variant="content" />
+  <ContactPage client:load />
 </Layout>
-
-<style>
-  :global(html),
-  :global(body) {
-    overflow: auto !important;
-  }
-</style>
