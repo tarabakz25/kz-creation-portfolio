@@ -1,5 +1,5 @@
 import profile from "./content/kizuki-aiki.json";
-import MenuItem from "~/components/layouts/menuItem";
+import MenuItem from "~/shared/components/layouts/menuItem";
 
 const socials = [
   {

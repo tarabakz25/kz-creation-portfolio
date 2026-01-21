@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { Observer } from "gsap/Observer";
 import { useGSAP } from "@gsap/react";
-import MenuItem from "~/components/layouts/menuItem";
+import MenuItem from "~/shared/components/layouts/menuItem";
 import worksData from "./content/works.json";
 import type { ImageMetadata } from "astro";
 

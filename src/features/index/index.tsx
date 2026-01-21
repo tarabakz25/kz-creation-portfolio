@@ -1,5 +1,5 @@
-import Footer from "~/components/layouts/footer";
-import MenuItem from "../../components/layouts/menuItem";
+import Footer from "~/shared/components/layouts/footer";
+import MenuItem from "~/shared/components/layouts/menuItem";
 
 export default function IndexPage() {
   return (

@@ -1,6 +1,6 @@
 import gsap from 'gsap';
 import { useEffect, useRef } from "react";
-import { FadeBlob } from '~/components/gsap/fadeBlob';
+import { FadeBlob } from '~/shared/components/gsap/fadeBlob';
 
 const menuItems = [
   {

@@ -1,5 +1,5 @@
 import { ContactForm } from "~/features/contact/components/contact-form";
-import MenuItem from "~/components/layouts/menuItem";
+import MenuItem from "~/shared/components/layouts/menuItem";
 
 export default function ContactPage() {
   return (

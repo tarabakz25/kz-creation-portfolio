@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
-import { Label } from "~/components/ui/label";
+import { Button } from "~/shared/components/ui/button";
+import { Input } from "~/shared/components/ui/input";
+import { Textarea } from "~/shared/components/ui/textarea";
+import { Label } from "~/shared/components/ui/label";
 
 export function ContactForm() {
   const [isLoading, setIsLoading] = useState(false);
