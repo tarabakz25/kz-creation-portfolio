@@ -1,60 +1,94 @@
 import gsap from "gsap";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-interface LoadingProps {
+interface Props {
   onComplete?: () => void;
 }
 
-interface Cell {
-  id: number,
-  col: number,
-  row: number,
-  distance: number,
-}
-
-export default function Loading({ onComplete }: LoadingProps) {
+export default function Loading({ onComplete }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  
-  const [cols, setCols] = useState(0);
-  const [rows, setRows] = useState(0);
-  
-  const CELL_SIZE = 40;
-  
+  const lineRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
+
   useEffect(() => {
-    if (!containerRef.current) return;
-    
-    setCols(Math.ceil(window.innerWidth / CELL_SIZE));
-    setRows(Math.ceil(window.innerHeight / CELL_SIZE));
-  }, []);
-  
-  useEffect(() => {
-    if (!containerRef.current) return;
-    
-    const centerX = Math.floor(cols / 2);
-    const centerY = Math.floor(rows / 2);
-    
-    const cells: Cell[] = [];
-    let id = 0;
-    for (let row = 0; row < rows; i++) {
-      for (let col = 0; col < cols; i++) {
-        const distance = Math.hypot(col - centerX, row - centerY);
-        cells.push({ id: id++, row, col, distance });
-      }
-    }
-    
-    for (let i = cells.length - 1; i > 0; i--) {
-      [cells[i], cells[j]] = [cells[j], cells[i]];
-    }
-  })
-  
+    if (!containerRef.current || !textRef.current || !lineRef.current || !overlayRef.current) return;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        setIsVisible(false);
+        onComplete?.();
+      },
+    });
+
+    // Initial state
+    gsap.set(textRef.current, { opacity: 0, y: 20 });
+    gsap.set(lineRef.current, { scaleX: 0 });
+
+    // Animation sequence
+    tl.to(textRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: "power3.out",
+    })
+      .to(
+        lineRef.current,
+        {
+          scaleX: 1,
+          duration: 1.2,
+          ease: "power2.inOut",
+        },
+        "-=0.3"
+      )
+      .to(textRef.current, {
+        opacity: 0,
+        y: -20,
+        duration: 0.5,
+        ease: "power2.in",
+        delay: 0.3,
+      })
+      .to(
+        lineRef.current,
+        {
+          opacity: 0,
+          duration: 0.3,
+        },
+        "-=0.3"
+      )
+      .to(overlayRef.current, {
+        yPercent: -100,
+        duration: 0.8,
+        ease: "power3.inOut",
+      });
+
+    return () => {
+      tl.kill();
+    };
+  }, [onComplete]);
+
+  if (!isVisible) return null;
+
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[100] w-full h-screen"
+      className="fixed inset-0 z-[100] w-full h-screen pointer-events-none"
     >
-      <div className="flex flex-col items-center justify-center">
-        <div ref={textRef} className="font-futura_pt text-base">Kz Creation</div>
+      <div
+        ref={overlayRef}
+        className="absolute inset-0 bg-[#131313] flex flex-col items-center justify-center"
+      >
+        <div
+          ref={textRef}
+          className="font-futura_pt text-2xl tracking-[0.3em] text-white uppercase"
+        >
+          Kz Creation
+        </div>
+        <div
+          ref={lineRef}
+          className="w-32 h-[1px] bg-white/50 mt-4 origin-left"
+        />
       </div>
     </div>
   );
