@@ -31,10 +31,13 @@ export default function AboutPage() {
       </div>
       <div className="w-full items-right text-white flex flex-col justify-between">
         <div className="text-right space-y-4">
-          <h1 className="text-3xl font-futura_100">Kizuki Aiki</h1>
-          <h2 className="text-xl font-eurostile font-light">
+          <h1 className="text-3xl font-futura_pt tracking-wider">Kizuki Aiki</h1>
+          <h2 className="text-xl font-avenir font-light">
             Full Stack Developer / App && Web Designer
           </h2>
+        </div>
+        
+        <div className="text-right space-y-4 font-avenir">
         </div>
 
         <div className="w-full flex flex-col text-right text-white">
@@ -43,7 +46,7 @@ export default function AboutPage() {
               <a
                 key={index}
                 href={social.url}
-                className="text-white hover:text-gray-300 font-futura_pt"
+                className="text-white hover:text-gray-300 font-futura_pt tracking-wider"
               >
                 {social.name}
               </a>

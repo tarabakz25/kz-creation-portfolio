@@ -27,7 +27,7 @@ export default function MenuItem() {
     <main className="flex flex-col gap-2">
       {menuItems.map(({ title, url }) => {
         return (
-          <FadeBlob key={title} href={url} className='font-eurostile font-light tracking-wide text-xl'>
+          <FadeBlob key={title} href={url} className='font-avenir font-light text-xl'>
             {title}
           </FadeBlob>
         )
