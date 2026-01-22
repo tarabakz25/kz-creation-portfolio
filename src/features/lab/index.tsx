@@ -80,13 +80,26 @@ export default function LabPage() {
   }, [currentIndex]);
 
   useGSAP(() => {
+    let lastScrollTime = 0;
+    const scrollCooldown = 1200; // ms - アニメーション完了まで次のスクロールを無視
+
     const obs = Observer.create({
       target: window,
-      type: "wheel,touch,pointer",
+      type: "wheel,touch",
       wheelSpeed: -1,
-      onUp: () => goToSlide(indexRef.current - 1),
-      onDown: () => goToSlide(indexRef.current + 1),
-      tolerance: 10,
+      onUp: () => {
+        const now = Date.now();
+        if (now - lastScrollTime < scrollCooldown) return;
+        lastScrollTime = now;
+        goToSlide(indexRef.current - 1);
+      },
+      onDown: () => {
+        const now = Date.now();
+        if (now - lastScrollTime < scrollCooldown) return;
+        lastScrollTime = now;
+        goToSlide(indexRef.current + 1);
+      },
+      tolerance: 50,
       preventDefault: true,
     });
 
@@ -99,79 +112,76 @@ export default function LabPage() {
 
   return (
     <PageTransitionProvider>
-    <main className="h-screen flex justify-between px-[5vw] py-[10vh] overflow-hidden">
-      {/* Left Section: Static */}
-      <div className="flex flex-col items-start w-full min-h-screen text-white gap-8 z-20 pointer-events-none">
-        <h1 className="text-3xl font-futura_pt tracking-wider pointer-events-auto">
-          My Works.
-        </h1>
-        <div className="pointer-events-auto">
-          <MenuItem />
-        </div>
-      </div>
-
-      {/* Right Section: Dynamic Content */}
-      <div
-        className="w-full flex flex-col justify-center items-end text-white relative z-10"
-        ref={contentRef}
-      >
-        <div className="w-full max-w-2xl flex flex-col gap-6 items-end text-right">
-          {/* Image */}
-          <a
-            href={currentWork.url || undefined}
-            target={currentWork.url ? "_blank" : undefined}
-            rel="noopener noreferrer"
-            className={`block w-full aspect-video rounded-lg overflow-hidden border border-white/10 shadow-2xl relative group ${currentWork.url ? "cursor-pointer hover:border-white/30" : "cursor-default"}`}
-          >
-            <img
-              src={currentWork.imageObj!.src}
-              alt={currentWork.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-            {currentWork.url && (
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <span className="font-futura_pt tracking-widest text-sm border border-white px-3 py-1 rounded-full">
-                  VISIT
-                </span>
-              </div>
-            )}
-          </a>
-
-          {/* Details */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-end gap-3">
-              <span className="text-xs font-mono text-white/50">
-                0{currentIndex + 1} / 0{works.length}
-              </span>
-              <h2 className="text-4xl font-futura_pt font-bold leading-none">
-                {currentWork.name}
-              </h2>
-            </div>
-
-            <div className="flex flex-wrap justify-end gap-2">
-              {currentWork.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-xs text-white/70 bg-white/5 px-2 py-1 rounded border border-white/5"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
+      <main className="h-screen flex justify-between px-[5vw] py-[10vh] overflow-hidden">
+        {/* Left Section: Static */}
+        <div className="flex flex-col items-start w-full min-h-screen text-white gap-8 z-20 pointer-events-none">
+          <h1 className="text-3xl font-futura_pt tracking-wider pointer-events-auto">
+            My Works.
+          </h1>
+          <div className="pointer-events-auto">
+            <MenuItem />
           </div>
         </div>
 
-        {/* Navigation Indicators (Optional, but good for UX) */}
-        <div className="absolute right-[-2vw] top-1/2 -translate-y-1/2 flex flex-col gap-2">
-          {works.map((_, idx) => (
-            <div
-              key={idx}
-              className={`w-1 h-1 rounded-full transition-all duration-300 ${idx === currentIndex ? "bg-white h-3" : "bg-white/20"}`}
-            />
-          ))}
+        {/* Right Section: Dynamic Content */}
+        <div
+          className="w-full flex flex-col justify-center items-end text-white relative z-10"
+          ref={contentRef}
+        >
+          <div className="w-full max-w-2xl flex flex-col gap-6 items-end text-right">
+            {/* Image */}
+            <a
+              href={currentWork.url || undefined}
+              target={currentWork.url ? "_blank" : undefined}
+              rel="noopener noreferrer"
+              className={`block w-full aspect-video rounded-lg overflow-hidden border border-white/10 shadow-2xl relative group ${currentWork.url ? "cursor-pointer hover:border-white/30" : "cursor-default"}`}
+            >
+              <img
+                src={currentWork.imageObj!.src}
+                alt={currentWork.name}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              {currentWork.url && (
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <span className="font-futura_pt tracking-widest text-sm border border-white px-3 py-1 rounded-full">
+                    VISIT
+                  </span>
+                </div>
+              )}
+            </a>
+
+            {/* Details */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-end gap-3">
+                <h2 className="text-4xl font-avenir leading-none">
+                  {currentWork.name}
+                </h2>
+              </div>
+
+              <div className="flex flex-wrap justify-end gap-2">
+                {currentWork.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-xs text-white/70 bg-white/5 px-2 py-1 rounded border border-white/5"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Navigation Indicators (Optional, but good for UX) */}
+          <div className="absolute right-[-2vw] top-1/2 -translate-y-1/2 flex flex-col gap-2">
+            {works.map((_, idx) => (
+              <div
+                key={idx}
+                className={`w-1 h-1 rounded-full transition-all duration-300 ${idx === currentIndex ? "bg-white h-3" : "bg-white/20"}`}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
     </PageTransitionProvider>
   );
 }

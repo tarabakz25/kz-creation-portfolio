@@ -12,6 +12,7 @@ export default {
         eurostile: ["eurostile", "sans-serif"],
         eurostile_cond: ["eurostile-condensed", "sans-serif"],
         shuei_gothic: ["dnp-shuei-gothic-gin-std", "sans-serif"],
+        avenir: ['"Avenir"', "sans-serif"],
       },
     },
   },
