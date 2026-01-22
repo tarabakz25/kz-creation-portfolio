@@ -1,5 +1,11 @@
 import gsap from "gsap";
-import { useLayoutEffect, useRef, useState, createContext, useContext } from "react";
+import {
+  useLayoutEffect,
+  useRef,
+  useState,
+  createContext,
+  useContext,
+} from "react";
 
 interface TransitionContextType {
   navigateTo: (url: string) => void;
@@ -10,7 +16,9 @@ const TransitionContext = createContext<TransitionContextType | null>(null);
 export const usePageTransition = () => {
   const context = useContext(TransitionContext);
   if (!context) {
-    throw new Error("usePageTransition must be used within PageTransitionProvider");
+    throw new Error(
+      "usePageTransition must be used within PageTransitionProvider",
+    );
   }
   return context;
 };
@@ -49,11 +57,15 @@ export function PageTransitionProvider({ children }: Props) {
           y: 0,
           duration: 0.6,
           ease: "power2.out",
-        }
+        },
       );
     } else {
-      // No transition, show immediately
-      gsap.set(smoothWrapper || contentRef.current, { opacity: 1, y: 0 });
+      // No transition, show immediately - but NOT on first visit (loading handles that)
+      const isFirstVisit =
+        document.documentElement.hasAttribute("data-first-visit");
+      if (!isFirstVisit) {
+        gsap.set(smoothWrapper || contentRef.current, { opacity: 1, y: 0 });
+      }
     }
   }, [isPageEntry]);
 

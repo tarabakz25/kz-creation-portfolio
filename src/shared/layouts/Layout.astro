@@ -65,6 +65,37 @@ import Footer from "~/shared/components/layouts/footer";
     <title>Kz Creation</title>
   </head>
   <body class="m-0 p-0 overflow-auto w-full relative z-0">
+    <!-- Loading overlay - shown before React hydrates on first visit -->
+    <div
+      id="loading-overlay"
+      class="fixed inset-0 z-[100] w-full h-screen pointer-events-none"
+    >
+      <div
+        id="loading-bg"
+        class="absolute inset-0 bg-[#131313] flex flex-col items-center justify-center"
+      >
+        <div
+          id="loading-text"
+          class="font-futura_pt text-2xl tracking-[0.3em] text-white uppercase opacity-0"
+          style="transform: translateY(20px)"
+        >
+          Kz Creation
+        </div>
+        <div
+          id="loading-line"
+          class="w-32 h-[1px] bg-white/50 mt-4 origin-left"
+          style="transform: scaleX(0)"
+        >
+        </div>
+      </div>
+    </div>
+    <script is:inline>
+      // Hide loading overlay if not first visit
+      if (sessionStorage.getItem("hasVisited") === "true") {
+        document.getElementById("loading-overlay").style.display = "none";
+      }
+    </script>
+
     <div
       class="fixed inset-0 w-full h-screen bg-[#131313] pointer-events-none -z-10"
       style={{
