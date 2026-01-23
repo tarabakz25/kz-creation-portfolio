@@ -1,6 +1,7 @@
 import MenuItem from "~/shared/components/layouts/menuItem";
 import { useFirstVisitLoading } from "~/shared/hooks/useFirstVisitLoading";
 import { PageTransitionProvider } from "~/shared/components/pageTransition";
+import Interactive3DText from "~/shared/components/interactive3DText";
 
 export default function IndexPage() {
   useFirstVisitLoading();
@@ -15,9 +16,11 @@ export default function IndexPage() {
           <MenuItem />
         </div>
         <div className="w-full flex flex-col items-right justify-center text-white">
-          <div className="text-right">
-            <h1 className="text-3xl font-avenir italic tracking-wide">A thrill-seeking explorer in a wild world</h1>
-            <p className="text-xl font-shuei_gothic">激動の世を楽しむ探求者</p>
+          <div className="h-[300px] w-full">
+            <Interactive3DText 
+              englishText="A thrill-seeking explorer in a wild world"
+              japaneseText="激動の世を楽しむ探求者"
+            />
           </div>
         </div>
       </main>
