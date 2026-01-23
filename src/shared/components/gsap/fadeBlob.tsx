@@ -63,7 +63,7 @@ export const FadeBlob = ({ children, href, className }: Props) => {
     <div ref={containerRef} className="py-1 flex items-center">
       <div
         ref={blobRef}
-        className="w-1.5 h-1.5 bg-cyan-500 rounded-full mr-1 opacity-0"
+        className="w-1.5 h-1.5 bg-white rounded-full mr-1 opacity-0"
       />
       <a
         ref={textRef}

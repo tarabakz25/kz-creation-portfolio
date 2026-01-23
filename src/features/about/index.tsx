@@ -13,7 +13,7 @@ const socials = [
   },
   {
     name: "Instagram",
-    url: "https://instagram.com/kz25_01/",
+    url: "https://instagram.com/kizu25_01/",
   },
   {
     name: "Prarie Card",
