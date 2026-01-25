@@ -16,7 +16,9 @@ export default function IndexPage() {
         </div>
         <div className="w-full flex flex-col items-right justify-center text-white">
           <div className="text-right">
-            <h1 className="text-3xl font-avenir italic tracking-wide">A thrill-seeking explorer in a wild world</h1>
+            <h1 className="text-3xl font-avenir italic tracking-wide">
+              A thrill-seeking explorer in a wild world
+            </h1>
             <p className="text-xl font-shuei_gothic">激動の世を楽しむ探求者</p>
           </div>
         </div>
