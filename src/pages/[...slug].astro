@@ -2,6 +2,14 @@
 import Layout from "~/shared/layouts/Layout.astro";
 import App from "~/features/app/App";
 
+// Export static paths for build
+export async function getStaticPaths() {
+  const validRoutes = ["about", "lab", "contact"];
+  return validRoutes.map(route => ({
+    params: { slug: route }
+  }));
+}
+
 // 有効なルートのみ許可
 const validRoutes = ["about", "lab", "contact"];
 const { slug } = Astro.params;
