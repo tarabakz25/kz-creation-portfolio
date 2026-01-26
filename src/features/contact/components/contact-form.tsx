@@ -51,58 +51,43 @@ export function ContactForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-2xl flex flex-col gap-8 px-8"
+      className="w-full max-w-xl flex flex-col items-end gap-8"
     >
       <div className="grid w-full items-center gap-3">
-        <Label
-          htmlFor="name"
-          className="text-white text-lg font-futura_pt tracking-wide"
-        >
-          Name
-        </Label>
         <Input
           required
           name="name"
           type="text"
           id="name"
+          placeholder="Name..."
           autoComplete="name"
-          className="bg-white/5 border-white/10 text-white placeholder:text-white/30 h-12"
+          className="bg-white/5 border border-none text-white placeholder:text-white/30 h-12"
         />
       </div>
       <div className="grid w-full items-center gap-3">
-        <Label
-          htmlFor="email"
-          className="text-white text-lg font-futura_pt tracking-wide"
-        >
-          Email
-        </Label>
         <Input
           required
           name="email"
           type="email"
           id="email"
+          placeholder="Email..."
           autoComplete="email"
-          className="bg-white/5 border-white/10 text-white placeholder:text-white/30 h-12"
+          className="bg-white/5 border border-none text-white placeholder:text-white/30 h-12"
         />
       </div>
       <div className="grid w-full gap-3">
-        <Label
-          htmlFor="message"
-          className="text-white text-lg font-futura_pt tracking-wide"
-        >
-          Message
-        </Label>
         <Textarea
           required
           name="message"
           id="message"
-          className="bg-white/5 border-white/10 text-white placeholder:text-white/30 min-h-[240px] resize-none"
+          placeholder="Message..."
+          className="bg-white/5 border border-none text-white placeholder:text-white/30 min-h-[240px] resize-none"
         />
       </div>
       <Button
         disabled={isLoading}
         type="submit"
-        className="w-full bg-white text-black hover:bg-white/90 font-futura_pt tracking-wider text-lg h-12 mt-4"
+        className="px-8 bg-white text-black hover:bg-white/90 font-futura_pt tracking-wider text-lg h-12 mt-4"
       >
         {isLoading ? "Sending..." : "Send Message"}
       </Button>

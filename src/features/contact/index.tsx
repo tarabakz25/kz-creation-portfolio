@@ -9,7 +9,7 @@ export default function ContactPage() {
         <MenuItem />
       </div>
 
-      <div className="flex flex-col justify-center items-start w-full text-white gap-8">
+      <div className="flex flex-col justify-center items-end w-full text-white gap-8">
         <ContactForm />
       </div>
     </main>
