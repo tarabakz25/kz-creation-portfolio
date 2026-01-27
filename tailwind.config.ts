@@ -8,7 +8,7 @@ export default {
         futura_pt: ["futura-pt", "sans-serif"],
         comma: ["comma-sans", "sans-serif"],
         shuei_gothic: ["dnp-shuei-gothic-gin-std", "sans-serif"],
-        avenir: ["avenir-lt-pro", "sans-serif"],
+        avenir: ["avenir-next-lt-pro", "sans-serif"],
       },
     },
   },

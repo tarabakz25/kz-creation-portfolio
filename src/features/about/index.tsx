@@ -36,17 +36,35 @@ export default function AboutPage() {
           </h2>
         </div>
 
-        <div className="text-right space-y-4 font-avenir"></div>
+        <div className="text-xl text-right font-light space-y-4 font-avenir">
+          <div>Next.js / Astro / Vite / React / Tailwindcss / Node.js </div>   
+          <div>Vercel / Supabase / Drizzle / Prisma / DynamoDB / API Gateway / AWS Lambda</div>
+          <div>Cursor / Claude code / Manus / Google AI Studio</div>
+        </div>
 
-        <div className="w-full flex flex-col text-right text-white">
+        <div className="w-full flex flex-col items-end text-right text-white">
           {socials.map((social, index) => {
             return (
               <a
                 key={index}
                 href={social.url}
-                className="text-white hover:text-gray-300 font-futura_pt tracking-wider"
+                className="flex items-center gap-2 text-white hover:text-gray-300 font-futura_pt tracking-wider"
               >
                 {social.name}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-3 w-auto"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  />
+                </svg>
               </a>
             );
           })}
