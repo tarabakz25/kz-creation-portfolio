@@ -31,7 +31,7 @@ export default function AboutPage() {
           <h1 className="text-3xl font-futura_pt tracking-wider">
             Kizuki Aiki
           </h1>
-          <h2 className="text-xl font-avenir font-light">
+          <h2 className="text-xl font-avenir">
             Full Stack Developer / App && Web Designer
           </h2>
         </div>

@@ -24,11 +24,11 @@ const menuItems = [
 export default function MenuItem() {
   
   return (
-    <main className="flex flex-col gap-2">
+    <main className="flex flex-col gap-1">
       {menuItems.map(({ title, url }) => {
       
         return (
-          <FadeBlob key={title} href={url} className='font-avenir font-light text-xl'>
+          <FadeBlob key={title} href={url} className='font-avenir text-xl'>
             {title}
           </FadeBlob>
         )
