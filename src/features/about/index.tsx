@@ -32,7 +32,7 @@ export default function AboutPage() {
             Kizuki Aiki
           </h1>
           <h2 className="text-xl font-avenir">
-            Full Stack Developer / App && Web Designer
+            Full Stack Developer / App & Web Designer
           </h2>
         </div>
 
